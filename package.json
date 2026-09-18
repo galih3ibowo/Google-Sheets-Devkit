@@ -1,0 +1,43 @@
+{
+  "name": "google-sheets-devkit",
+  "version": "0.1.0",
+  "description": "Reusable developer tool for local AI-assisted development against Google Sheets — read-only MCP, schema governance, auth, migrations.",
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "bin": {
+    "google-sheets-devkit": "dist/cli/index.js",
+    "google-sheets-devkit-mcp": "dist/mcp/server.js"
+  },
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test test/**/*.test.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@google-cloud/local-auth": "^3.0.1",
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "googleapis": "^181.0.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.9.2"
+  },
+  "keywords": [
+    "google-sheets",
+    "mcp",
+    "sheets",
+    "ai",
+    "clasp",
+    "apps-script"
+  ],
+  "license": "MIT"
+}

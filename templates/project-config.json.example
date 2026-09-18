@@ -1,0 +1,6 @@
+{
+  "spreadsheetIdEnv": "GOOGLE_SHEET_ID",
+  "schema": {
+    "manifestPath": "schema/manifest.json"
+  }
+}

@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+.env.local
+tools/secrets/
+*.token.json
+google-token.json
+credentials.json
+client_secret*.json
+.opencode.local.*
+npm-debug.log
+.DS_Store

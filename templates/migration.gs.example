@@ -1,0 +1,65 @@
+/**
+ * Migration: 20260918_add_class_duration
+ * Description: Add Duration column to target sheet
+ * Safety: idempotent, verifies preconditions, records history in PropertiesService
+ *
+ * HUMAN-CONTROLLED: Run manually via Apps Script editor after `clasp push`.
+ * Never executed automatically by AI.
+ */
+
+// Unique ID - must match filename without extension
+var MIGRATION_ID = "20260918_add_class_duration";
+
+function runMigration_20260918_add_class_duration() {
+  runMigrationById_(MIGRATION_ID, migration_20260918_add_class_duration);
+}
+
+function migration_20260918_add_class_duration() {
+  var ss = SpreadsheetApp.getActive();
+  // Example precondition checks
+  var sheet = ss.getSheetByName("Example Sheet");
+  if (!sheet) throw new Error("Missing sheet: Example Sheet");
+  var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0].map(function(h){return String(h).trim();});
+  if (headers.indexOf("Duration") !== -1) {
+    // Already applied - idempotent
+    Logger.log("Column Duration already exists, skipping insert.");
+    return;
+  }
+  if (headers.indexOf("Name") === -1) throw new Error("Precondition failed: Example Sheet missing Name column; schema may have drifted.");
+
+  // Find insert position: example after "Name"
+  var insertAt = headers.indexOf("Name") + 2; // 1-based + after
+  sheet.insertColumnAfter(insertAt - 1);
+  sheet.getRange(1, insertAt).setValue("Duration");
+  sheet.getRange(2, insertAt, Math.max(sheet.getLastRow()-1,1), 1).setValue(""); // default blank
+
+  Logger.log("Migration " + MIGRATION_ID + " applied: inserted Duration column.");
+}
+
+// Generic runner helpers (if not already in src/Migrations.js)
+function runMigrationById_(id, fn) {
+  var props = PropertiesService.getDocumentProperties();
+  var key = "migration_" + id;
+  if (props.getProperty(key)) {
+    Logger.log("Migration " + id + " already recorded at " + props.getProperty(key) + " - skipping.");
+    return;
+  }
+  var lock = LockService.getDocumentLock();
+  lock.waitLock(30000);
+  try {
+    if (props.getProperty(key)) {
+      Logger.log("Migration " + id + " already applied (race).");
+      return;
+    }
+    fn();
+    props.setProperty(key, new Date().toISOString());
+    Logger.log("Migration " + id + " recorded.");
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function listAppliedMigrations_() {
+  var props = PropertiesService.getDocumentProperties().getProperties();
+  return Object.keys(props).filter(function(k){return k.indexOf("migration_")==0;}).sort();
+}

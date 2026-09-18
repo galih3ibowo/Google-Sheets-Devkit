@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "spreadsheet": {
+    "name": "My Project Sheet",
+    "idEnv": "GOOGLE_SHEET_ID"
+  },
+  "headerRow": 1,
+  "managedSheets": {
+    "Example Sheet": {
+      "maxRows": 1000,
+      "columns": [
+        { "name": "ID", "type": "string", "required": true },
+        { "name": "Name", "type": "string", "required": true },
+        { "name": "Email", "type": "email", "required": false },
+        { "name": "Active", "type": "boolean", "required": true }
+      ]
+    },
+    "Config Sheet": {
+      "maxRows": 500,
+      "headerValidation": {
+        "mode": "skip",
+        "reason": "Multi-block config sheet has no single header row"
+      },
+      "columns": []
+    }
+  },
+  "ignoredSheets": [
+    "Notes",
+    "Scratch"
+  ]
+}
